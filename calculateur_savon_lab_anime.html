@@ -1,0 +1,526 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400;600&family=DM+Sans:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#faf9f6;color:#1a1814;padding:0}
+.app{max-width:760px;margin:0 auto;padding:24px 20px 60px}
+.header{text-align:center;padding:28px 0 24px;border-bottom:1px solid #e8e2d9;margin-bottom:24px}
+.header-badge{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:#7a7468;margin-bottom:10px}
+.header h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:600;line-height:1.3}
+.header h2{font-size:12px;font-weight:400;color:#7a7468;margin-top:4px}
+.header p{font-size:11px;color:#c8713a;margin-top:6px;font-family:'DM Mono',monospace;letter-spacing:1px}
+.card{background:#fff;border:1px solid #e8e2d9;border-radius:12px;padding:20px;margin-bottom:14px}
+.stitle{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:#7a7468;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e8e2d9;text-transform:uppercase}
+.oil-row{display:grid;grid-template-columns:1fr 90px 32px;gap:6px;margin-bottom:7px;align-items:center}
+.oil-row select,.oil-row input[type=number]{font-family:'DM Sans',sans-serif;font-size:12px;padding:7px 9px;border:1px solid #e8e2d9;border-radius:8px;background:#f5f0ea;color:#1a1814;width:100%;outline:none}
+.oil-row input[type=number]{text-align:center}
+.rm{width:32px;height:32px;border:1px solid #e8e2d9;border-radius:7px;background:#f5f0ea;color:#7a7468;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rm:hover{background:#fde8e8;color:#b84040}
+.add-btn{width:100%;padding:9px;border:1.5px dashed #e8e2d9;border-radius:8px;background:transparent;color:#7a7468;cursor:pointer;font-size:12px;margin-top:4px}
+.add-btn:hover{border-color:#c8713a;color:#c8713a}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.pbox label{font-size:11px;color:#7a7468;display:block;margin-bottom:5px}
+.pbox input{width:100%;padding:7px 9px;border:1px solid #e8e2d9;border-radius:8px;background:#f5f0ea;font-size:13px;font-weight:500;outline:none}
+.mgrid{display:grid;grid-template-columns:2fr 70px 70px 80px;gap:6px;margin-top:7px}
+.mgrid input,.mgrid select{padding:7px 8px;border:1px solid #e8e2d9;border-radius:8px;background:#f5f0ea;font-size:12px;color:#1a1814;outline:none;width:100%}
+.btn-p{width:100%;padding:12px;background:#c8713a;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;margin-top:4px;letter-spacing:.3px}
+.btn-p:hover{background:#b35e2a}
+.btn2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.btn-s{padding:9px;background:#f5f0ea;color:#1a1814;border:1px solid #e8e2d9;border-radius:8px;font-size:12px;cursor:pointer}
+.btn-s:hover{background:#e8e2d9}
+.metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.met{background:#f5f0ea;border:1px solid #e8e2d9;border-radius:10px;padding:12px;text-align:center}
+.ml{font-size:10px;color:#7a7468;font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+.mv{font-size:26px;font-weight:500;font-family:'Playfair Display',serif}
+.btrack{height:5px;background:#e8e2d9;border-radius:3px;margin-top:7px;overflow:hidden}
+.bfill{height:100%;border-radius:3px;transition:width .7s ease}
+.rtable{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+.rtable th{text-align:left;padding:7px 8px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:#7a7468;border-bottom:1px solid #e8e2d9;font-weight:500}
+.rtable td{padding:8px 8px;border-bottom:1px solid #f5f0ea}
+.rtable tr:last-child td{border:none}
+.tag{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500}
+.tag-dur{background:#fdecd9;color:#8a4010}
+.tag-doux{background:#d9eef4;color:#0f5a7a}
+.hidden{display:none}
+.alert{padding:10px 12px;border-radius:8px;font-size:12px;margin-top:8px}
+.aw{background:#fff7ed;border:1px solid #fcd9a8;color:#8a5010}
+.aok{background:#edf7f2;border:1px solid #a8dcbc;color:#1a5a35}
+.ins-bar{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;background:#f5f0ea;border:1px solid #e8e2d9;margin-top:8px}
+.idot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.ival{font-size:14px;font-weight:500;font-family:'DM Mono',monospace}
+.chart-wrap{margin-top:14px}
+canvas#barChart{width:100%!important;height:170px!important}
+.sap-bg{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center}
+.sap-bg.open{display:flex}
+.sap-modal{background:#fff;border-radius:14px;padding:20px;width:90%;max-width:600px;max-height:80vh;overflow-y:auto}
+.mhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.mhdr h3{font-family:'Playfair Display',serif;font-size:17px}
+.closeb{width:30px;height:30px;border-radius:7px;border:1px solid #e8e2d9;background:#f5f0ea;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
+.fbar{display:flex;gap:5px;margin-bottom:10px}
+.fb{padding:4px 12px;border:1px solid #e8e2d9;border-radius:20px;background:#f5f0ea;font-size:11px;cursor:pointer}
+.fb.active{background:#c8713a;border-color:#c8713a;color:#fff}
+
+/* ─── LAB ANIMATION ─── */
+.lab-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,15,25,.92);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.lab-overlay.hidden{display:none}
+.lab-scene{width:340px;height:320px;position:relative}
+.lab-msg{font-family:'DM Mono',monospace;font-size:13px;color:#a0c8f0;letter-spacing:1.5px;margin-top:8px;text-align:center;min-height:20px}
+.lab-steps{display:flex;gap:8px;margin-top:14px}
+.lstep{padding:4px 14px;border-radius:20px;font-size:11px;font-family:'DM Mono',monospace;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.35);transition:.4s}
+.lstep.done{border-color:#3a7a50;color:#6fcf97}
+.lstep.active{border-color:#c8713a;color:#f0a060;animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ERLENMEYER FLASK */
+.flask-wrap{position:absolute;left:120px;top:40px}
+svg.flask{overflow:visible}
+
+/* BURETTE */
+.burette-wrap{position:absolute;left:26px;top:10px}
+
+/* THERMOMETER */
+.thermo-wrap{position:absolute;right:20px;top:20px}
+
+/* BUBBLES */
+.bubble{position:absolute;border-radius:50%;border:1.5px solid rgba(120,200,255,.5);background:rgba(100,180,255,.08);animation:rise linear infinite}
+@keyframes rise{0%{transform:translateY(0) scale(1);opacity:.7}100%{transform:translateY(-90px) scale(1.4);opacity:0}}
+
+/* STEAM */
+.steam{position:absolute;width:6px;height:40px;border-radius:3px;background:rgba(200,230,255,.12);animation:steam1 2s ease-in-out infinite}
+@keyframes steam1{0%,100%{transform:translateX(0) scaleY(1);opacity:.4}50%{transform:translateX(6px) scaleY(1.3);opacity:.15}}
+
+/* STIR BAR */
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* LIQUID WAVE */
+@keyframes wave{0%,100%{d:path("M0,0 Q18,-6 36,0 T72,0 L72,28 L0,28 Z")}50%{d:path("M0,0 Q18,6 36,0 T72,0 L72,28 L0,28 Z")}}
+</style>
+
+<div class="app">
+  <div class="header">
+    <div class="header-badge">République Algérienne Démocratique et Populaire</div>
+    <h1>Calculateur de savon</h1>
+    <h2>INSFP "Laadjin Miloud" — Sidi Bel Abbès 2</h2>
+    <p>Créé par M. Aziz Rostom · Huiles Dynamiques</p>
+  </div>
+
+  <div class="card">
+    <div class="stitle">Huiles de la recette</div>
+    <div id="oilsArea"></div>
+    <button class="add-btn" onclick="addOilRow()">+ Ajouter une huile</button>
+  </div>
+
+  <div class="card">
+    <div class="stitle">Paramètres</div>
+    <div class="pgrid">
+      <div class="pbox"><label>Surgras (%)</label><input type="number" id="sf" value="8" min="0" max="20"></div>
+      <div class="pbox"><label>Concentration lessive (%)</label><input type="number" id="conc" value="30" min="10" max="50"></div>
+    </div>
+    <div class="stitle" style="margin-top:14px">Huile personnalisée</div>
+    <div class="mgrid">
+      <input type="text" id="mn" placeholder="Nom">
+      <input type="number" id="ms" placeholder="SAP" step=".001">
+      <input type="number" id="mi" placeholder="INS">
+      <select id="mt"><option value="Dur">Dur</option><option value="Doux">Doux</option></select>
+    </div>
+    <button class="btn-p" style="background:#3a6b8a;margin-top:8px" onclick="addManual()">Ajouter à la liste</button>
+  </div>
+
+  <button class="btn-p" onclick="startCalc()">Calculer la recette</button>
+
+  <div class="btn2">
+    <button class="btn-s" onclick="showSAP()">Tableau SAP</button>
+    <button class="btn-s" onclick="exportPDF()">Exporter PDF</button>
+    <button class="btn-s" onclick="toggleAdv()">Conseils pratiques</button>
+    <button class="btn-s" onclick="exportSAPPDF()">PDF Tableau SAP</button>
+  </div>
+
+  <div id="advCard" class="card hidden" style="margin-top:14px">
+    <div class="stitle">Conseils pratiques</div>
+    <div style="font-size:13px;color:#5a5450;line-height:1.7">
+      <p style="margin-bottom:8px">✦ 50–70% huiles douces + 30–50% huiles dures → savon solide, bonne mousse, doux pour la peau.</p>
+      <p style="margin-bottom:8px">✦ Huile de ricin (max 10%) → mousse crémeuse. Huile de coco (max 30%) → dureté et bulles.</p>
+      <p>✦ INS idéal : 136–160. En dessous → mou/huileux. Au dessus → sec/irritant.</p>
+    </div>
+  </div>
+
+  <div id="results" class="hidden">
+    <div class="card" style="margin-top:18px">
+      <div class="stitle">Propriétés du savon</div>
+      <div class="metrics">
+        <div class="met"><div class="ml">Bulles</div><div class="mv" id="mB" style="color:#c8713a">0%</div><div class="btrack"><div class="bfill" id="bB" style="background:#c8713a"></div></div></div>
+        <div class="met"><div class="ml">Dureté</div><div class="mv" id="mH" style="color:#3a6b8a">0%</div><div class="btrack"><div class="bfill" id="bH" style="background:#3a6b8a"></div></div></div>
+        <div class="met"><div class="ml">Douceur</div><div class="mv" id="mS" style="color:#3a7a50">0%</div><div class="btrack"><div class="bfill" id="bS" style="background:#3a7a50"></div></div></div>
+      </div>
+      <div class="ins-bar"><div class="idot" id="iDot"></div><span style="font-size:12px;color:#7a7468">INS pondéré :</span><span class="ival" id="iVal">—</span></div>
+      <div id="iAdv" class="alert"></div>
+    </div>
+    <div class="card">
+      <div class="stitle">Récapitulatif des huiles</div>
+      <table class="rtable"><thead><tr><th>Huile</th><th>Qté (g)</th><th>SAP</th><th>INS</th><th>Type</th></tr></thead><tbody id="rTbody"></tbody></table>
+      <div class="chart-wrap"><canvas id="barChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="stitle">Formule de fabrication</div>
+      <table class="rtable"><thead><tr><th>Ingrédient</th><th>Quantité</th></tr></thead><tbody id="fTbody"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- LAB ANIMATION OVERLAY -->
+<div class="lab-overlay hidden" id="labOverlay">
+  <div class="lab-scene" id="labScene">
+
+    <!-- BURETTE (dropping NaOH) -->
+    <div class="burette-wrap">
+      <svg width="50" height="200" viewBox="0 0 50 200" style="overflow:visible">
+        <!-- stand -->
+        <rect x="22" y="0" width="6" height="140" rx="3" fill="#4a5568"/>
+        <rect x="5" y="130" width="40" height="6" rx="3" fill="#4a5568"/>
+        <!-- burette tube -->
+        <rect x="16" y="5" width="18" height="110" rx="4" fill="rgba(200,220,255,0.15)" stroke="#7ab0e0" stroke-width="1.5"/>
+        <!-- liquid inside burette (animated drain) -->
+        <rect id="buretteLiq" x="17" y="6" width="16" height="100" rx="3" fill="rgba(120,180,255,0.35)">
+          <animate attributeName="height" from="100" to="20" dur="4s" fill="freeze" id="bAnim"/>
+          <animate attributeName="y" from="6" to="86" dur="4s" fill="freeze"/>
+        </rect>
+        <!-- scale marks -->
+        <line x1="16" y1="20" x2="22" y2="20" stroke="#7ab0e0" stroke-width="1"/>
+        <line x1="16" y1="40" x2="22" y2="40" stroke="#7ab0e0" stroke-width="1"/>
+        <line x1="16" y1="60" x2="22" y2="60" stroke="#7ab0e0" stroke-width="1"/>
+        <line x1="16" y1="80" x2="22" y2="80" stroke="#7ab0e0" stroke-width="1"/>
+        <line x1="16" y1="100" x2="22" y2="100" stroke="#7ab0e0" stroke-width="1"/>
+        <!-- stopcock -->
+        <rect x="19" y="115" width="12" height="8" rx="2" fill="#888"/>
+        <!-- nozzle -->
+        <line x1="25" y1="123" x2="25" y2="145" stroke="#aaa" stroke-width="3" stroke-linecap="round"/>
+        <!-- DROP animated -->
+        <ellipse id="drop" cx="25" cy="148" rx="2.5" ry="3.5" fill="rgba(100,180,255,0.8)">
+          <animate attributeName="cy" values="148;175;148" dur="1.2s" repeatCount="indefinite"/>
+          <animate attributeName="ry" values="3.5;5;3.5" dur="1.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.8;0;0.8" dur="1.2s" repeatCount="indefinite"/>
+        </ellipse>
+      </svg>
+    </div>
+
+    <!-- ERLENMEYER FLASK -->
+    <div class="flask-wrap">
+      <svg class="flask" width="160" height="200" viewBox="0 0 160 200" style="overflow:visible">
+        <defs>
+          <clipPath id="flaskClip">
+            <path d="M55,10 L55,80 L10,165 Q10,185 80,185 Q150,185 150,165 L105,80 L105,10 Z"/>
+          </clipPath>
+        </defs>
+        <!-- flask glass -->
+        <path d="M55,10 L55,80 L10,165 Q10,185 80,185 Q150,185 150,165 L105,80 L105,10 Z" fill="rgba(200,230,255,0.12)" stroke="#7ab0e0" stroke-width="2" stroke-linejoin="round"/>
+        <!-- neck -->
+        <rect x="52" y="0" width="56" height="18" rx="4" fill="rgba(200,230,255,0.15)" stroke="#7ab0e0" stroke-width="1.5"/>
+
+        <!-- LIQUID inside flask (animated fill) -->
+        <g clip-path="url(#flaskClip)">
+          <!-- base liquid -->
+          <rect id="liqBase" x="0" y="185" width="160" height="0" fill="rgba(255,200,80,0.35)">
+            <animate attributeName="height" from="0" to="80" dur="3s" fill="freeze"/>
+            <animate attributeName="y" from="185" to="105" dur="3s" fill="freeze"/>
+          </rect>
+          <!-- wave surface -->
+          <path fill="rgba(255,200,80,0.5)" id="wavePath">
+            <animate attributeName="d" values="M0,105 Q40,98 80,105 T160,105 L160,185 L0,185 Z;M0,105 Q40,112 80,105 T160,105 L160,185 L0,185 Z;M0,105 Q40,98 80,105 T160,105 L160,185 L0,185 Z" dur="2s" repeatCount="indefinite"/>
+          </path>
+          <!-- reaction color change: oil yellow → soap white -->
+          <rect x="0" y="100" width="160" height="90" fill="rgba(245,240,220,0.0)" id="soapLiq">
+            <animate attributeName="fill-opacity" from="0" to="0.6" begin="3s" dur="2s" fill="freeze"/>
+          </rect>
+          <!-- bubbles inside flask -->
+          <circle cx="40" cy="160" r="4" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1">
+            <animate attributeName="cy" values="170;110;170" dur="2.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.6;0;0.6" dur="2.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="70" cy="165" r="3" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1">
+            <animate attributeName="cy" values="175;120;175" dur="1.8s" begin=".4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.6;0;0.6" dur="1.8s" begin=".4s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="100" cy="158" r="5" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1">
+            <animate attributeName="cy" values="168;108;168" dur="3s" begin=".8s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.6;0;0.6" dur="3s" begin=".8s" repeatCount="indefinite"/>
+          </circle>
+          <!-- STIR ANIMATION (bar at bottom) -->
+          <rect x="45" y="173" width="70" height="7" rx="3.5" fill="rgba(180,50,50,0.5)" transform-origin="80 176.5">
+            <animateTransform attributeName="transform" type="rotate" from="0 80 176" to="360 80 176" dur="1s" repeatCount="indefinite"/>
+          </rect>
+        </g>
+
+        <!-- foam at top of liquid -->
+        <g clip-path="url(#flaskClip)" opacity="0">
+          <g id="foam">
+            <circle cx="60" cy="104" r="6" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="72" cy="101" r="5" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="84" cy="103" r="7" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="98" cy="102" r="5" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="110" cy="105" r="4" fill="rgba(255,255,255,0.5)"/>
+          </g>
+          <animate attributeName="opacity" from="0" to="1" begin="4s" dur="1.5s" fill="freeze"/>
+        </g>
+
+        <!-- STEAM above flask -->
+        <g id="steamG" opacity="0">
+          <rect x="72" y="-20" width="5" height="30" rx="2.5" fill="rgba(200,230,255,0.15)">
+            <animate attributeName="height" values="10;35;10" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="-5;-30;-5" dur="2s" repeatCount="indefinite"/>
+            <animateTransform attributeName="transform" type="translate" values="0,0;4,-5;0,0" dur="2.5s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="83" y="-15" width="5" height="25" rx="2.5" fill="rgba(200,230,255,0.12)">
+            <animate attributeName="height" values="8;28;8" dur="2.3s" begin=".3s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="-3;-25;-3" dur="2.3s" begin=".3s" repeatCount="indefinite"/>
+            <animateTransform attributeName="transform" type="translate" values="0,0;-3,-4;0,0" dur="2s" begin=".3s" repeatCount="indefinite"/>
+          </rect>
+          <animate attributeName="opacity" from="0" to="1" begin="2.5s" dur="1s" fill="freeze"/>
+        </g>
+
+        <!-- reaction label -->
+        <text x="80" y="200" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#a0c8f0" opacity="0">
+          Saponification
+          <animate attributeName="opacity" from="0" to="1" begin="3s" dur="1s" fill="freeze"/>
+        </text>
+      </svg>
+    </div>
+
+    <!-- THERMOMETER -->
+    <div class="thermo-wrap">
+      <svg width="30" height="200" viewBox="0 0 30 200">
+        <!-- tube -->
+        <rect x="10" y="10" width="10" height="150" rx="5" fill="rgba(200,220,255,0.1)" stroke="#7ab0e0" stroke-width="1.5"/>
+        <!-- mercury -->
+        <rect x="12" y="90" width="6" height="70" rx="3" fill="#e74c3c" id="mercury">
+          <animate attributeName="height" from="30" to="90" dur="5s" fill="freeze"/>
+          <animate attributeName="y" from="130" to="70" dur="5s" fill="freeze"/>
+        </rect>
+        <!-- bulb -->
+        <circle cx="15" cy="170" r="10" fill="#e74c3c"/>
+        <!-- tick marks -->
+        <line x1="10" y1="40" x2="16" y2="40" stroke="#7ab0e0" stroke-width="1"/>
+        <line x1="10" y1="60" x2="16" y2="60" stroke="#7ab0e0" stroke-width="1"/>
+        <line x1="10" y1="80" x2="16" y2="80" stroke="#7ab0e0" stroke-width="1"/>
+        <line x1="10" y1="100" x2="16" y2="100" stroke="#7ab0e0" stroke-width="1"/>
+        <line x1="10" y1="120" x2="16" y2="120" stroke="#7ab0e0" stroke-width="1"/>
+        <text x="22" y="44" font-size="8" fill="#a0c8f0" font-family="DM Mono,monospace">60°</text>
+        <text x="22" y="84" font-size="8" fill="#a0c8f0" font-family="DM Mono,monospace">45°</text>
+        <text x="22" y="124" font-size="8" fill="#a0c8f0" font-family="DM Mono,monospace">30°</text>
+      </svg>
+    </div>
+
+  </div>
+
+  <div class="lab-msg" id="labMsg">Préparation du laboratoire...</div>
+  <div class="lab-steps">
+    <div class="lstep" id="s0">Pesée</div>
+    <div class="lstep" id="s1">Lessive</div>
+    <div class="lstep" id="s2">Mélange</div>
+    <div class="lstep" id="s3">Saponification</div>
+    <div class="lstep" id="s4">Résultats</div>
+  </div>
+</div>
+
+<div class="sap-bg" id="sapBg">
+  <div class="sap-modal">
+    <div class="mhdr"><h3>Tableau de saponification</h3><button class="closeb" onclick="closeSAP()">✕</button></div>
+    <div class="fbar">
+      <button class="fb active" onclick="filterSAP('all',this)">Toutes</button>
+      <button class="fb" onclick="filterSAP('Dur',this)">Durs</button>
+      <button class="fb" onclick="filterSAP('Doux',this)">Doux</button>
+    </div>
+    <table class="rtable" style="font-size:11px"><thead><tr><th>Huile</th><th>SAP</th><th>INS</th><th>Type</th></tr></thead><tbody id="sapTb"></tbody></table>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+let oils=[
+  {name:"Huile de coco",sap:0.190,ins:258,type:"Dur"},
+  {name:"Huile de palme",sap:0.141,ins:145,type:"Dur"},
+  {name:"Huile de palme rouge",sap:0.141,ins:145,type:"Dur"},
+  {name:"Beurre de karité",sap:0.128,ins:116,type:"Dur"},
+  {name:"Beurre de cacao",sap:0.137,ins:157,type:"Dur"},
+  {name:"Huile de babassu",sap:0.175,ins:230,type:"Dur"},
+  {name:"Graisse de porc",sap:0.138,ins:139,type:"Dur"},
+  {name:"Graisse de bœuf",sap:0.140,ins:147,type:"Dur"},
+  {name:"Huile de neem",sap:0.136,ins:124,type:"Dur"},
+  {name:"Huile d'olive",sap:0.134,ins:109,type:"Doux"},
+  {name:"Huile de ricin",sap:0.128,ins:95,type:"Doux"},
+  {name:"Huile d'amande douce",sap:0.136,ins:97,type:"Doux"},
+  {name:"Huile de soja",sap:0.135,ins:61,type:"Doux"},
+  {name:"Huile de tournesol",sap:0.134,ins:63,type:"Doux"},
+  {name:"Huile de pépins de raisin",sap:0.126,ins:66,type:"Doux"},
+  {name:"Huile de colza",sap:0.124,ins:56,type:"Doux"},
+  {name:"Huile de lin",sap:0.135,ins:6,type:"Doux"},
+  {name:"Huile de sésame",sap:0.133,ins:81,type:"Doux"},
+  {name:"Huile d'argan",sap:0.136,ins:97,type:"Doux"},
+  {name:"Huile de noix",sap:0.135,ins:48,type:"Doux"},
+  {name:"Huile de macadamia",sap:0.139,ins:119,type:"Doux"},
+  {name:"Huile de jojoba",sap:0.069,ins:11,type:"Doux"},
+  {name:"Huile de riz",sap:0.128,ins:70,type:"Doux"},
+  {name:"Huile de germe de blé",sap:0.131,ins:58,type:"Doux"},
+  {name:"Huile de moringa",sap:0.134,ins:105,type:"Doux"},
+  {name:"Huile de pépins de figue de barbarie",sap:0.133,ins:73,type:"Doux"},
+  {name:"Huile de noyau d'abricot",sap:0.135,ins:91,type:"Doux"},
+  {name:"Huile de marula",sap:0.133,ins:104,type:"Doux"}
+];
+let rows=[];let chartInst=null;let sfilt='all';let calcEntries=[];
+
+function bopt(o){return`<option value="${o.name}">${o.name} (SAP:${o.sap} INS:${o.ins})</option>`}
+
+function addOilRow(){
+  const a=document.getElementById('oilsArea');
+  const d=document.createElement('div');d.className='oil-row';
+  d.innerHTML=`<select>${oils.map(bopt).join('')}</select><input type="number" placeholder="g" min="0" value="100"><button class="rm" onclick="removeRow(this)">✕</button>`;
+  a.appendChild(d);rows.push(d);
+}
+function removeRow(b){const r=b.parentElement;r.remove();rows=rows.filter(x=>x!==r)}
+function addManual(){
+  const n=document.getElementById('mn').value.trim();
+  const s=parseFloat(document.getElementById('ms').value);
+  const i=parseFloat(document.getElementById('mi').value);
+  const t=document.getElementById('mt').value;
+  if(!n||isNaN(s)||isNaN(i)){alert("Remplissez nom, SAP et INS.");return;}
+  oils.push({name:n,sap:s,ins:i,type:t});
+  rows.forEach(r=>{const sel=r.querySelector('select');const v=sel.value;sel.innerHTML=oils.map(bopt).join('');sel.value=v;});
+  document.getElementById('mn').value='';document.getElementById('ms').value='';document.getElementById('mi').value='';
+  alert(`"${n}" ajoutée !`);
+}
+
+function startCalc(){
+  if(rows.length===0){alert("Ajoutez au moins une huile.");return;}
+  const entries=[];let tot=0;
+  rows.forEach(r=>{
+    const sn=r.querySelector('select').value;
+    const q=parseFloat(r.querySelector('input').value)||0;
+    const o=oils.find(x=>x.name===sn);
+    if(o&&q>0){entries.push({...o,qty:q});tot+=q;}
+  });
+  if(tot===0){alert("Entrez des quantités valides.");return;}
+  calcEntries=entries;
+  runLabAnimation(()=>renderResults(entries,tot));
+}
+
+function runLabAnimation(cb){
+  const ov=document.getElementById('labOverlay');
+  const msg=document.getElementById('labMsg');
+  ov.classList.remove('hidden');
+  const steps=[
+    {id:'s0',msg:'Pesée des huiles et corps gras...',t:0},
+    {id:'s1',msg:'Préparation de la lessive de soude (NaOH)...',t:1400},
+    {id:'s2',msg:'Mélange des huiles — chauffage à 45°C...',t:2800},
+    {id:'s3',msg:'Réaction de saponification en cours...',t:4200},
+    {id:'s4',msg:'Calcul des propriétés du savon !',t:5600}
+  ];
+  let cur=-1;
+  function next(){
+    cur++;
+    if(cur>=steps.length){
+      setTimeout(()=>{ov.classList.add('hidden');cb();},600);
+      return;
+    }
+    const sp=steps[cur];
+    msg.textContent=sp.msg;
+    if(cur>0)document.getElementById(steps[cur-1].id).classList.replace('active','done');
+    document.getElementById(sp.id).classList.add('active');
+    setTimeout(next,sp.t===0?1200:1400);
+  }
+  steps.forEach(s=>{const el=document.getElementById(s.id);el.className='lstep';});
+  setTimeout(next,200);
+}
+
+function renderResults(entries,tot){
+  const sf=parseFloat(document.getElementById('sf').value)||8;
+  const conc=parseFloat(document.getElementById('conc').value)||30;
+  const bubblers=['Huile de coco','Huile de babassu','Huile de ricin'];
+  const bub=entries.filter(e=>bubblers.includes(e.name)).reduce((s,e)=>s+e.qty,0)/tot*100;
+  const dur=entries.filter(e=>e.type==='Dur').reduce((s,e)=>s+e.qty,0)/tot*100;
+  const soft=Math.min(100,(100-dur)+sf);
+  const ins=entries.reduce((s,e)=>s+e.ins*(e.qty/tot),0);
+  const naoh=entries.reduce((s,e)=>s+e.qty*e.sap,0)*(1-sf/100);
+  const water=naoh/(conc/100)-naoh;
+
+  document.getElementById('mB').textContent=`${Math.round(bub)}%`;
+  document.getElementById('mH').textContent=`${Math.round(dur)}%`;
+  document.getElementById('mS').textContent=`${Math.round(soft)}%`;
+  document.getElementById('bB').style.width=`${Math.min(100,bub)}%`;
+  document.getElementById('bH').style.width=`${Math.min(100,dur)}%`;
+  document.getElementById('bS').style.width=`${Math.min(100,soft)}%`;
+  const rv=Math.round(ins);
+  document.getElementById('iVal').textContent=rv;
+  const dot=document.getElementById('iDot'),adv=document.getElementById('iAdv');
+  if(rv<136){dot.style.background='#e87a30';adv.className='alert aw';adv.textContent=`INS ${rv} — Savon risque d'être mou. Augmentez les huiles dures.`;}
+  else if(rv>165){dot.style.background='#b84040';adv.className='alert aw';adv.textContent=`INS ${rv} — Savon risque d'être sec. Ajoutez des huiles douces.`;}
+  else{dot.style.background='#3a7a50';adv.className='alert aok';adv.textContent=`INS ${rv} — Excellent équilibre ! Savon bien balancé.`;}
+
+  const tb=document.getElementById('rTbody');tb.innerHTML='';
+  entries.forEach(e=>{tb.innerHTML+=`<tr><td>${e.name}</td><td>${e.qty}g</td><td>${e.sap}</td><td>${e.ins}</td><td><span class="tag tag-${e.type.toLowerCase()}">${e.type}</span></td></tr>`;});
+
+  const ftb=document.getElementById('fTbody');ftb.innerHTML='';
+  ftb.innerHTML+=`<tr><td>Soude NaOH</td><td><strong>${naoh.toFixed(1)}g</strong></td></tr>`;
+  ftb.innerHTML+=`<tr><td>Eau (lessive ${conc}%)</td><td><strong>${water.toFixed(1)}g</strong></td></tr>`;
+  ftb.innerHTML+=`<tr><td>Corps gras total</td><td><strong>${tot}g</strong></td></tr>`;
+  ftb.innerHTML+=`<tr><td>Surgras</td><td><strong>${sf}%</strong></td></tr>`;
+
+  if(chartInst)chartInst.destroy();
+  const ctx=document.getElementById('barChart').getContext('2d');
+  chartInst=new Chart(ctx,{type:'bar',data:{
+    labels:entries.map(e=>e.name.replace(/Huile d[e']\s*/i,'').replace('Beurre de ','')),
+    datasets:[{label:'g',data:entries.map(e=>e.qty),backgroundColor:entries.map(e=>e.type==='Dur'?'#c8713a':'#3a6b8a'),borderRadius:5,borderSkipped:false}]
+  },options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},color:'#7a7468'},grid:{display:false}},y:{ticks:{font:{size:10},color:'#7a7468'},grid:{color:'#f5f0ea'}}}}});
+
+  document.getElementById('results').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function showSAP(){renderSAP();document.getElementById('sapBg').classList.add('open')}
+function closeSAP(){document.getElementById('sapBg').classList.remove('open')}
+function filterSAP(f,b){sfilt=f;document.querySelectorAll('.fb').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderSAP();}
+function renderSAP(){const tb=document.getElementById('sapTb');tb.innerHTML='';oils.filter(o=>sfilt==='all'?true:o.type===sfilt).forEach(o=>{tb.innerHTML+=`<tr><td>${o.name}</td><td>${o.sap}</td><td>${o.ins}</td><td><span class="tag tag-${o.type.toLowerCase()}">${o.type}</span></td></tr>`;});}
+function toggleAdv(){document.getElementById('advCard').classList.toggle('hidden')}
+
+function exportPDF(){
+  const r=document.querySelectorAll('#rTbody tr');
+  if(r.length===0){alert("Calculez d'abord.");return;}
+  const{jsPDF}=window.jspdf;const doc=new jsPDF();
+  doc.setFont('helvetica','bold');doc.setFontSize(13);
+  doc.text("République Algérienne Démocratique et Populaire",15,14);
+  doc.setFont('helvetica','normal');doc.setFontSize(11);
+  doc.text("INSFP \"Laadjin Miloud\" – Sidi Bel Abbès 2 — M. Aziz Rostom",15,22);
+  doc.setDrawColor(200,113,58);doc.line(15,26,195,26);
+  doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text("Recette de savon",15,34);
+  doc.setFont('helvetica','normal');doc.setFontSize(11);let y=44;
+  r.forEach((row,i)=>{
+    const c=[...row.cells].map(x=>x.textContent.trim());
+    if(i%2===0)doc.setFillColor(250,245,238);else doc.setFillColor(255,255,255);
+    doc.rect(14,y-4,180,8,'F');
+    doc.text(`${c[0]} — ${c[1]} | SAP: ${c[2]} | INS: ${c[3]} | ${c[4]}`,15,y);
+    y+=10;if(y>275){doc.addPage();y=20;}
+  });
+  doc.line(15,y+2,195,y+2);y+=10;
+  doc.setFont('helvetica','bold');doc.text("Formule :",15,y);y+=8;
+  doc.setFont('helvetica','normal');
+  document.querySelectorAll('#fTbody tr').forEach(row=>{
+    const c=[...row.cells].map(x=>x.textContent.trim());
+    doc.text(`${c[0]} : ${c[1]}`,15,y);y+=8;
+  });
+  doc.save("Recette_Savon_INSFP.pdf");
+}
+function exportSAPPDF(){
+  const{jsPDF}=window.jspdf;const doc=new jsPDF();
+  doc.setFont('helvetica','bold');doc.setFontSize(13);
+  doc.text("Tableau de saponification — INSFP Laadjin Miloud",15,14);
+  doc.setFont('helvetica','normal');doc.setFontSize(10);let y=24;
+  oils.forEach((o,i)=>{
+    if(i%2===0)doc.setFillColor(250,245,238);else doc.setFillColor(255,255,255);
+    doc.rect(14,y-3.5,180,7,'F');
+    doc.text(`${o.name}  —  SAP: ${o.sap}  |  INS: ${o.ins}  |  ${o.type}`,15,y);
+    y+=8;if(y>275){doc.addPage();y=20;}
+  });
+  doc.save("Tableau_SAP_INSFP.pdf");
+}
+
+addOilRow();
+</script>
